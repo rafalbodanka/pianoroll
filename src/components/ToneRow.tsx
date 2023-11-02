@@ -12,7 +12,7 @@ export default function ToneRow({ pitchMax, pitchMin, index }: { pitchMax: numbe
         <>
         <rect
         x={x}
-        y={y}
+        y={y-h}
         fill={bgColor}
         width={w}
         height={h}/>

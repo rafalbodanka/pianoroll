@@ -20,7 +20,7 @@ export default function Tile(
     const h = 1 / pitchSpan;
 
     if (y >= 0 && h > 0 && w > 0 && x >= 0) {
-        return <rect width={w} height={h} x={x} y={y} />;
+        return <rect width={w} height={h} x={x} y={y-h} />;
       } else {
         return null;
       }
