@@ -23,7 +23,6 @@ export default function Grid({
         const start = playedRollIndex * 60;
         const end = start + 60;
         const partData = data.slice(start, end)
-        console.log(playedRollIndex)
         const openPlayer = (it: number) => {
             setPlayedRollIndex(it)
             setView('play')

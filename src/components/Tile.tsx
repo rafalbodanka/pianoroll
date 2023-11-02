@@ -15,7 +15,6 @@ export default function Tile(
       }
 
     let y = 1 - (note.pitch - pitchMin) / pitchSpan
-    if (y < 0 ) console.log(note.pitch, pitchMin, note.pitch - pitchMin)
     let x = timeToX(note.start - start);
     let w = timeToX(note.end - note.start);
     const h = 1 / pitchSpan;

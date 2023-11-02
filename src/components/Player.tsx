@@ -12,13 +12,11 @@ export default function Player({
     playedRollIndex: number,
     partData: Note[]
 }) {
-    const [isPlaying, setIsPlaying] = useState<boolean>(false)
     const [currentTime, setCurrentTime] = useState(0);
 
     return (
         <div className="h-screen">
-            <MainPianoRoll it={playedRollIndex} sequence={partData} isPlayed={true} isPlaying={isPlaying} currentTime={currentTime}/>
-            <PlayerOptions isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
+            <MainPianoRoll it={playedRollIndex} sequence={partData} isPlayed={true} currentTime={currentTime}/>
         </div>
     )
 }

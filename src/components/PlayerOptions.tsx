@@ -7,7 +7,7 @@ export default function PlayerOptions({isPlaying, setIsPlaying}: {isPlaying: boo
     }
 
     return (
-        <div className="flex justify-center w-[80%]">
+        <div className="flex justify-center">
             <div
             onClick={switchPlay}
             className="mt-6 cursor-pointer bg-gray-300 inline-flex items-center justify-center h-8 w-8" >
