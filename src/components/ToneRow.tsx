@@ -14,7 +14,7 @@ export default function ToneRow({ pitchMax, pitchMin, index }: { pitchMax: numbe
         x={x}
         y={y}
         fill={bgColor}
-        width={'100%'}
+        width={w}
         height={h}/>
         </>
     )

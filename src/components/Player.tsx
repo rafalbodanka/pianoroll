@@ -1,22 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Note } from "../types/Note";
-import PianoRoll from "./PianoRoll";
-import PlayerOptions from "./PlayerOptions";
 import MainPianoRoll from "./MainPianoRoll";
 
 export default function Player({
     playedRollIndex,
     partData
 }:
-{
-    playedRollIndex: number,
-    partData: Note[]
-}) {
-    const [currentTime, setCurrentTime] = useState(0);
+    {
+        playedRollIndex: number,
+        partData: Note[]
+    }) {
 
     return (
         <div className="h-screen">
-            <MainPianoRoll it={playedRollIndex} sequence={partData} isPlayed={true} currentTime={currentTime}/>
+            <MainPianoRoll it={playedRollIndex} sequence={partData} isPlayed={true}/>
         </div>
     )
 }

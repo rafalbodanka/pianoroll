@@ -1,9 +1,8 @@
+import { useEffect, useRef, useState } from "react";
 import { Note } from "../types/Note";
 import { Color } from "../types/Color";
-import { useEffect, useRef, useState } from "react";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
-import { time } from "console";
 import PlayerOptions from "./PlayerOptions";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
@@ -17,7 +16,7 @@ export function generateGradientTable(startColor: Color, endColor: Color, steps:
     return gradientTable;
 }
 
-export default function MainPianoRoll({ it, sequence, isPlayed, currentTime }: { it: number; sequence: Note[]; isPlayed: boolean, currentTime: number }) {
+export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; sequence: Note[], isPlayed: boolean }) {
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [start, setStart] = useState<number>(0);
@@ -86,6 +85,10 @@ export default function MainPianoRoll({ it, sequence, isPlayed, currentTime }: {
             setIsDrawing(false)
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+            if (xCoordinate === timestampX0) {
+                clearTimestamps()
+                return
+            }
             setTimestampX1(xCoordinate)
         }
     }
@@ -106,10 +109,14 @@ export default function MainPianoRoll({ it, sequence, isPlayed, currentTime }: {
         };
     }, [isDrawing]);
 
-    useEffect(() => {
+    const clearTimestamps = () => {
         setTimestampX0(null)
         setTimestampX1(null)
         setSelectedNotesNum(0)
+    }
+
+    useEffect(() => {
+        clearTimestamps()
     }, [sequence])
 
     useEffect(() => {
@@ -118,21 +125,27 @@ export default function MainPianoRoll({ it, sequence, isPlayed, currentTime }: {
         const startTimeInSeconds = start + (end - start) * Math.min(timestampX0, timestampX1);
         const endTimeInSeconds = start + (end - start) * Math.max(timestampX0, timestampX1);
 
+        //Solution: mark info
         console.log(`Length: ${end}\nMark start: ${startTimeInSeconds}\nMark end: ${endTimeInSeconds}`);
         const markedNotes = sequence.filter(note => {
             return (
                 (note.start <= endTimeInSeconds && note.end >= startTimeInSeconds) ||
                 (note.start >= startTimeInSeconds && note.end <= endTimeInSeconds) ||
                 (note.start <= startTimeInSeconds && note.end >= endTimeInSeconds)
-              );
-            })
-        console.log('Marked notes: ')
-        console.log(markedNotes)
+            );
+        })
         setSelectedNotesNum(markedNotes.length)
 
+        // Solution: show marked notes
+        console.log('Marked notes: ')
+        console.log(markedNotes)
     }, [isDrawing]);
 
-
+    const formatTime = (timeInSeconds: number) => {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = Math.round(timeInSeconds % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
 
     return (
         <div className={`w-[80%] h-1/2 shadow-lg border-[1.5px] border-[#2d2d2d] shadow-[rgb(24, 24, 24)] ${!isPlayed && 'cursor-pointer hover:scale-105 duration-300'}`}>
@@ -159,10 +172,14 @@ export default function MainPianoRoll({ it, sequence, isPlayed, currentTime }: {
                 {timestampX0 && timestampX1 && <rect width={Math.abs(timestampX1 - timestampX0)} height={1} x={timestampX1 > timestampX0 ? timestampX0 : timestampX1} y={0} fill="rgb(49, 27, 146)" fillOpacity={'40%'} />}
                 {timestampX1 && <rect width={0.002} height={1} x={timestampX1} y={0} fill="rgb(49, 27, 146)" />}
             </svg>
+            <div className="flex justify-between">
+                <div className="select-none">{formatTime(start)}</div>
+                <div className="select-none">{formatTime(end)}</div>
+            </div>
             <div className="select-none">piano roll number {it}</div>
-                <div className="select-none">
-                    Number of selected notes: <span className="font-bold">{selectedNotesNum}</span>
-                </div>
+            <div className="select-none">
+                Number of selected notes: <span className="font-bold">{selectedNotesNum}</span>
+            </div>
             <PlayerOptions isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
         </div>
     );
