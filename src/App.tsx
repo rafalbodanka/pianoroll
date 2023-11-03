@@ -9,7 +9,7 @@ function App() {
   const [playedRollIndex, setPlayedRollIndex] = useState<number>(-1)
 
   return (
-    <div>
+    <div className={`${playedRollIndex !== -1 && 'lg:max-h-screen lg:overflow-hidden'}`}>
       <Navbar />
       <Grid
         playedRollIndex={playedRollIndex}

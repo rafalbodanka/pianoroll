@@ -30,7 +30,7 @@ export default function Grid({
                 <div className="cursor-pointer mb-8 inline-flex select-none" onClick={() => { setPlayedRollIndex(-1) }}>&larr; return to grid view </div>
                 {playedRollIndex !== -1 && <Player playedRollIndex={playedRollIndex} partData={partData} />}
             </div>
-            <div className={`${playedRollIndex === -1 ? 'main-grid' : 'mt-8 col-span-5 lg:col-span-1 flex flex-col gap-8'}`}>
+            <div className={`${playedRollIndex === -1 ? 'main-grid' : 'mt-16 col-span-5 lg:col-span-1 flex flex-col gap-8 lg:overflow-y-scroll py-4 lg:h-[calc(100vh-44px-3em-80px)]'}`}>
                 {!isLoading ?
                     Array.from({ length: playedRollIndex === -1 ? 20 : 19 }, (_, it) => {
                         if (playedRollIndex === it) return
