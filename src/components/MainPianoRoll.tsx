@@ -4,6 +4,7 @@ import { Color } from "../types/Color";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
 import PlayerOptions from "./PlayerOptions";
+import { time } from "console";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
     const gradientTable = [];
@@ -70,7 +71,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             setTimestampX0(xCoordinate)
         }
     }
-    
+
     const handleSVGMove = (e: React.MouseEvent<SVGSVGElement>) => {
         if (!isDrawing) return
         if (svgRef.current && timestampX0) {
@@ -79,7 +80,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             setTimestampX1(xCoordinate)
         }
     }
-    
+
     const handleSVGUp = (e: React.MouseEvent<SVGSVGElement>) => {
         if (svgRef.current && timestampX0) {
             setIsDrawing(false)
@@ -96,41 +97,41 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     //mobile actions
     const handleSVGTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
         if (svgRef.current) {
-          setIsDrawing(true);
-          setTimestampX1(null);
-          const touch = e.touches[0]; // Get the first touch point
-          const svgBoundingBox = svgRef.current.getBoundingClientRect();
-          const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-          setTimestampX0(xCoordinate);
-        }
-      };
-      
-      const handleSVGTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
-        if (!isDrawing) return;
-        if (svgRef.current && timestampX0) {
-          const touch = e.touches[0]; // Get the first touch point
-          const svgBoundingBox = svgRef.current.getBoundingClientRect();
-          const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-          setTimestampX1(xCoordinate);
-        }
-      };
-      
-      const handleSVGTouchEnd = (e: React.TouchEvent<SVGSVGElement>) => {
-        if (svgRef.current && timestampX0) {
-          setIsDrawing(false);
-          const touches = e.changedTouches;
-          if (touches.length > 0) {
-            const touch = touches[0]; // Get the first changed touch
+            setIsDrawing(true);
+            setTimestampX1(null);
+            const touch = e.touches[0]; // Get the first touch point
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            if (xCoordinate === timestampX0) {
-              clearTimestamps();
-              return;
-            }
-            setTimestampX1(xCoordinate);
-          }
+            setTimestampX0(xCoordinate);
         }
-      };
+    };
+
+    const handleSVGTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
+        if (!isDrawing) return;
+        if (svgRef.current && timestampX0) {
+            const touch = e.touches[0]; // Get the first touch point
+            const svgBoundingBox = svgRef.current.getBoundingClientRect();
+            const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+            setTimestampX1(xCoordinate);
+        }
+    };
+
+    const handleSVGTouchEnd = (e: React.TouchEvent<SVGSVGElement>) => {
+        if (svgRef.current && timestampX0) {
+            setIsDrawing(false);
+            const touches = e.changedTouches;
+            if (touches.length > 0) {
+                const touch = touches[0]; // Get the first changed touch
+                const svgBoundingBox = svgRef.current.getBoundingClientRect();
+                const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+                if (xCoordinate === timestampX0) {
+                    clearTimestamps();
+                    return;
+                }
+                setTimestampX1(xCoordinate);
+            }
+        }
+    };
 
     useEffect(() => {
         // Attach a global mouseup event listener to handle mouseup outside the SVG element
@@ -159,48 +160,51 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     }, [sequence])
 
     useEffect(() => {
-        if (isDrawing || !timestampX0 || !timestampX1) return;
+        if (!timestampX0 || !timestampX1) return;
 
         const startTimeInSeconds = start + (end - start) * Math.min(timestampX0, timestampX1);
         const endTimeInSeconds = start + (end - start) * Math.max(timestampX0, timestampX1);
-
+        
         //Solution: mark info
-        console.log(`Length: ${end}\nMark start: ${startTimeInSeconds}\nMark end: ${endTimeInSeconds}`);
         const markedNotes = sequence.filter(note => {
             return (
                 (note.start <= endTimeInSeconds && note.end >= startTimeInSeconds) ||
                 (note.start >= startTimeInSeconds && note.end <= endTimeInSeconds) ||
                 (note.start <= startTimeInSeconds && note.end >= endTimeInSeconds)
-            );
-        })
+                );
+            })
         setSelectedNotesNum(markedNotes.length)
 
+        if (isDrawing) return
         // Solution: show marked notes
         console.log('Marked notes: ')
         console.log(markedNotes)
-    }, [isDrawing]);
+    }, [isDrawing, timestampX1]);
 
     const formatTime = (timeInSeconds: number) => {
         const minutes = Math.floor(timeInSeconds / 60);
-        const seconds = Math.round(timeInSeconds % 60);
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        const seconds = Math.floor(timeInSeconds % 60);
+        const milliseconds = Math.round((timeInSeconds - Math.floor(timeInSeconds)) * 1000)
+        .toString()
+        .padStart(3, '0');
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds}`;
     };
 
     return (
         <div className={`w-[100%] md:w-[90%] h-1/2 ${!isPlayed && 'cursor-pointer hover:scale-105 duration-300'}`}>
             <div className="select-none">piano roll number {it}</div>
             <svg className="border-[1.5px] border-[#2d2d2d]"
-            ref={svgRef}
-            onMouseDown={handleSVGClick}
-            onMouseMove={handleSVGMove}
-            onMouseUp={handleSVGUp}
-            onTouchStart={handleSVGTouchStart}
-            onTouchMove={handleSVGTouchMove}
-            onTouchEnd={handleSVGTouchEnd}
-            width={'100%'}
-            height={'100%'}
-            viewBox="0 0 1 1"
-            preserveAspectRatio="none">
+                ref={svgRef}
+                onMouseDown={handleSVGClick}
+                onMouseMove={handleSVGMove}
+                onMouseUp={handleSVGUp}
+                onTouchStart={handleSVGTouchStart}
+                onTouchMove={handleSVGTouchMove}
+                onTouchEnd={handleSVGTouchEnd}
+                width={'100%'}
+                height={'100%'}
+                viewBox="0 0 1 1"
+                preserveAspectRatio="none">
                 {end && Array.from({ length: pitchSpan }, (_, index) => {
                     return (
                         <ToneRow key={index} pitchMax={pitchMax} pitchMin={pitchMin} index={index} />
@@ -227,9 +231,21 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 <div className="select-none">{formatTime(start)}</div>
                 <div className="select-none">{formatTime(end)}</div>
             </div>
-            <div className="select-none">
-                Number of selected notes: <span className="font-bold">{selectedNotesNum}</span>
-            </div>
+            {timestampX0 && timestampX1 &&  
+                <div className="select-none">
+                    <p>
+                        Selected range:&nbsp;
+                        <span className="font-bold">
+                            {formatTime(start + (end - start) * Math.min(timestampX0, timestampX1))}
+                            &nbsp;:&nbsp;
+                            {formatTime(start + (end - start) * Math.max(timestampX0, timestampX1))}
+                        </span>
+                    </p>
+                    <p>
+                        Number of selected notes: <span className="font-bold">{selectedNotesNum}</span>
+                    </p>
+                </div>
+            }
             <PlayerOptions isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
         </div>
     );
