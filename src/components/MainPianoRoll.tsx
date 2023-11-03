@@ -4,7 +4,6 @@ import { Color } from "../types/Color";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
 import PlayerOptions from "./PlayerOptions";
-import KeySeparator from "./KeySeparator";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
     const gradientTable = [];

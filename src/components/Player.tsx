@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Note } from "../types/Note";
 import MainPianoRoll from "./MainPianoRoll";
 

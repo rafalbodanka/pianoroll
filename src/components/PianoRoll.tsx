@@ -1,9 +1,8 @@
 import { Note } from "../types/Note";
 import { Color } from "../types/Color";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
-import KeySeparator from "./KeySeparator";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
   const gradientTable = [];
