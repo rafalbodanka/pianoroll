@@ -5,6 +5,7 @@ import ToneRow from "./ToneRow";
 import Tile from "./Tile";
 import PlayerOptions from "./PlayerOptions";
 import { time } from "console";
+import Indicator from "./Indicator";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
     const gradientTable = [];
@@ -33,6 +34,8 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     const [selectedNotesNum, setSelectedNotesNum] = useState<number>(0)
 
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
+    const [playTimestamp, setPlayTimestamp] = useState<number>(0)
+    const [indicatorX, setIndicatorX] = useState(0)
 
     useEffect(() => {
         if (!sequence || sequence.length === 0) return;
@@ -56,6 +59,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         pitchSpan = pitchMax - pitchMin;
         setStart(sequence[0].start);
         setEnd(sequence[sequence.length - 1].end);
+        setPlayTimestamp(sequence[0].start)
         setNoteHeight(1 / pitchSpan);
         setPitchMax(pitchMax)
         setPitchMin(pitchMin)
@@ -69,6 +73,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
             setTimestampX0(xCoordinate)
+            setIsPlaying(false)
         }
     }
 
@@ -91,6 +96,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 return
             }
             setTimestampX1(xCoordinate)
+            setIndicatorX(Math.min(timestampX0, xCoordinate))
         }
     }
 
@@ -125,10 +131,11 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 const svgBoundingBox = svgRef.current.getBoundingClientRect();
                 const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
                 if (xCoordinate === timestampX0) {
-                    clearTimestamps();
+                    clearTimestamps()
                     return;
                 }
                 setTimestampX1(xCoordinate);
+                setIndicatorX(Math.min(timestampX0, xCoordinate))
             }
         }
     };
@@ -150,6 +157,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     }, [isDrawing]);
 
     const clearTimestamps = () => {
+        timestampX0 && setIndicatorX(timestampX0)
         setTimestampX0(null)
         setTimestampX1(null)
         setSelectedNotesNum(0)
@@ -226,12 +234,23 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 {timestampX0 && <rect width={0.002} height={1} x={timestampX0} y={0} fill="rgb(49, 27, 146)" />}
                 {timestampX0 && timestampX1 && <rect width={Math.abs(timestampX1 - timestampX0)} height={1} x={timestampX1 > timestampX0 ? timestampX0 : timestampX1} y={0} fill="rgb(49, 27, 146)" fillOpacity={'40%'} />}
                 {timestampX1 && <rect width={0.002} height={1} x={timestampX1} y={0} fill="rgb(49, 27, 146)" />}
+                <Indicator
+                x={indicatorX}
+                setX={setIndicatorX}
+                start={start} end={end}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                playTimestamp={playTimestamp}
+                setPlayTimestamp={setPlayTimestamp}
+                timestampX0={timestampX0}
+                timestampX1={timestampX1}
+                />
             </svg>
             <div className="flex justify-between">
                 <div className="select-none">{formatTime(start)}</div>
                 <div className="select-none">{formatTime(end)}</div>
             </div>
-            {timestampX0 && timestampX1 &&  
+            {timestampX0 && timestampX1 &&
                 <div className="select-none">
                     <p>
                         Selected range:&nbsp;
@@ -246,7 +265,19 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                     </p>
                 </div>
             }
-            <PlayerOptions isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+            {end &&
+            <PlayerOptions
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            playTimestamp={playTimestamp}
+            setPlayTimestamp={setPlayTimestamp}
+            x={indicatorX}
+            setX={setIndicatorX}
+            start={start}
+            end={end}
+            timestampX0={timestampX0}
+            timestampX1={timestampX1}
+            />}
         </div>
     );
 }

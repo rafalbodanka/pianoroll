@@ -1,32 +1,61 @@
 export default function PlayerOptions({
-    isPlaying, setIsPlaying }:
+    isPlaying, setIsPlaying, playTimestamp, setPlayTimestamp, start, end, x, setX, timestampX0, timestampX1 }:
     {
-        isPlaying: boolean, setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>
+        isPlaying: boolean,
+        setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>
+        playTimestamp: number,
+        setPlayTimestamp: React.Dispatch<React.SetStateAction<number>>;
+        start: number,
+        end: number,
+        x: number,
+        setX: React.Dispatch<React.SetStateAction<number>>;
+        timestampX0: number | null,
+        timestampX1: number | null,
     }) {
 
-    const switchPlay = () => {
+        const switchPlay = () => {
+        if (!timestampX0 && !isPlaying && x>=0.98) {
+            setX(0)
+        }
+        if (timestampX1 && timestampX0 && x>timestampX1-0.02) {
+            setX(timestampX0)
+        }
         setIsPlaying(prev => !prev)
     }
 
     const stopAction = () => {
         setIsPlaying(false)
+        setPlayTimestamp(start)
+        timestampX1 && timestampX0 ? setX(timestampX0) : setX(0)
     }
 
+    const formatTime = (timeInSeconds: number) => {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = Math.floor(timeInSeconds % 60);
+        const milliseconds = Math.round((timeInSeconds - Math.floor(timeInSeconds)) * 1000)
+            .toString()
+            .padStart(3, '0');
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds}`;
+    };
+
     return (
-        <div className="flex justify-center gap-4">
-            <div
-                onClick={switchPlay}
-                className="mt-6 cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
-                {isPlaying ?
-                    <img className="h-4" src={'img/pause.svg'} />
-                    :
-                    <img className="h-4" src={'img/play.svg'} />
-                }
-            </div>
-            <div
-                onClick={stopAction}
-                className="mt-6 cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
-                <img className="h-4" src={'img/stop.svg'} />
+        <div className="mt-6">
+            <p className="flex justify-center">{formatTime(start + (end - start) * x)}</p>
+            <div className="mt-2 flex justify-center gap-4">
+                <div
+                    onClick={switchPlay}
+                    className="cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
+                    {isPlaying ?
+                        <img className="h-4" src={'img/pause.svg'} />
+                        :
+                        <img className="h-4" src={'img/play.svg'} />
+                    }
+                </div>
+                <div
+                    onClick={stopAction}
+                    className="cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
+                    <img className="h-4" src={'img/stop.svg'} />
+                </div>
             </div>
         </div>
     )
