@@ -1,3 +1,5 @@
+import KeySeparator from "./KeySeparator";
+
 export default function ToneRow({ pitchMax, pitchMin, index }: { pitchMax: number, pitchMin: number, index: number }) {
 
     const tone = pitchMin + index
@@ -10,12 +12,13 @@ export default function ToneRow({ pitchMax, pitchMin, index }: { pitchMax: numbe
 
     return (
         <>
-        <rect
-        x={x}
-        y={y-h}
-        fill={bgColor}
-        width={w}
-        height={h}/>
+            <rect
+                x={x}
+                y={y - h}
+                fill={bgColor}
+                width={w}
+                height={h} />
+            <KeySeparator key={index} tone={tone} y={y} />
         </>
     )
 }

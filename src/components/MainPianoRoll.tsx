@@ -4,6 +4,7 @@ import { Color } from "../types/Color";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
 import PlayerOptions from "./PlayerOptions";
+import KeySeparator from "./KeySeparator";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
     const gradientTable = [];
@@ -152,7 +153,9 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             <svg ref={svgRef} onMouseDown={handleSVGClick} onMouseMove={handleSVGMove} onMouseUp={handleSVGUp} width={'100%'} height={'100%'} viewBox="0 0 1 1" preserveAspectRatio="none">
                 {end && Array.from({ length: pitchSpan }, (_, index) => {
                     return (
-                        <ToneRow key={index} pitchMax={pitchMax} pitchMin={pitchMin} index={index} />
+                        <>
+                            <ToneRow key={index} pitchMax={pitchMax} pitchMin={pitchMin} index={index} />
+                        </>
                     );
                 })}
                 {end && Array.from({ length: sequence.length }, (_, index) => {

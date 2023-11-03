@@ -3,6 +3,7 @@ import { Color } from "../types/Color";
 import { useEffect, useRef, useState } from "react";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
+import KeySeparator from "./KeySeparator";
 
 export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
   const gradientTable = [];
@@ -57,7 +58,7 @@ export default function PianoRoll({ it, sequence }: { it: number; sequence: Note
       <svg width={'100%'} height={'100%'} viewBox="0 0 1 1" preserveAspectRatio="none">
         {end && Array.from({ length: pitchSpan }, (_, index) => {
           return (
-            <ToneRow key={index} pitchMax={pitchMax} pitchMin={pitchMin} index={index} />
+              <ToneRow key={index} pitchMax={pitchMax} pitchMin={pitchMin} index={index} />
           );
         })}
         {end && Array.from({ length: sequence.length }, (_, index) => {
