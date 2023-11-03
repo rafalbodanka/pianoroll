@@ -9,7 +9,7 @@ function App() {
   const [playedRollIndex, setPlayedRollIndex] = useState<number>(-1)
 
   return (
-    <>
+    <div>
       <Navbar />
       <Grid
         playedRollIndex={playedRollIndex}
@@ -17,7 +17,7 @@ function App() {
         data={data}
         isLoading={isLoading}
       />
-    </>
+    </div>
   );
 }
 

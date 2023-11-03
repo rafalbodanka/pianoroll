@@ -11,7 +11,7 @@ export default function Player({
     }) {
 
     return (
-        <div className="h-screen">
+        <div className="lg:h-screen flex justify-center lg:justify-normal">
             <MainPianoRoll it={playedRollIndex} sequence={partData} isPlayed={true}/>
         </div>
     )
