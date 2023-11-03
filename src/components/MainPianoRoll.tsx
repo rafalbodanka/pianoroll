@@ -172,15 +172,15 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
 
         const startTimeInSeconds = start + (end - start) * Math.min(timestampX0, timestampX1);
         const endTimeInSeconds = start + (end - start) * Math.max(timestampX0, timestampX1);
-        
+
         //Solution: mark info
         const markedNotes = sequence.filter(note => {
             return (
                 (note.start <= endTimeInSeconds && note.end >= startTimeInSeconds) ||
                 (note.start >= startTimeInSeconds && note.end <= endTimeInSeconds) ||
                 (note.start <= startTimeInSeconds && note.end >= endTimeInSeconds)
-                );
-            })
+            );
+        })
         setSelectedNotesNum(markedNotes.length)
 
         if (isDrawing) return
@@ -193,8 +193,8 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         const minutes = Math.floor(timeInSeconds / 60);
         const seconds = Math.floor(timeInSeconds % 60);
         const milliseconds = Math.round((timeInSeconds - Math.floor(timeInSeconds)) * 1000)
-        .toString()
-        .padStart(3, '0');
+            .toString()
+            .padStart(3, '0');
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds}`;
     };
 
@@ -235,15 +235,15 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 {timestampX0 && timestampX1 && <rect width={Math.abs(timestampX1 - timestampX0)} height={1} x={timestampX1 > timestampX0 ? timestampX0 : timestampX1} y={0} fill="rgb(49, 27, 146)" fillOpacity={'40%'} />}
                 {timestampX1 && <rect width={0.002} height={1} x={timestampX1} y={0} fill="rgb(49, 27, 146)" />}
                 <Indicator
-                x={indicatorX}
-                setX={setIndicatorX}
-                start={start} end={end}
-                isPlaying={isPlaying}
-                setIsPlaying={setIsPlaying}
-                playTimestamp={playTimestamp}
-                setPlayTimestamp={setPlayTimestamp}
-                timestampX0={timestampX0}
-                timestampX1={timestampX1}
+                    x={indicatorX}
+                    setX={setIndicatorX}
+                    start={start} end={end}
+                    isPlaying={isPlaying}
+                    setIsPlaying={setIsPlaying}
+                    playTimestamp={playTimestamp}
+                    setPlayTimestamp={setPlayTimestamp}
+                    timestampX0={timestampX0}
+                    timestampX1={timestampX1}
                 />
             </svg>
             <div className="flex justify-between">
@@ -252,32 +252,37 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             </div>
             {timestampX0 && timestampX1 &&
                 <div className="select-none">
-                    <p>
-                        Selected range:&nbsp;
-                        <span className="font-bold">
-                            {formatTime(start + (end - start) * Math.min(timestampX0, timestampX1))}
-                            &nbsp;:&nbsp;
-                            {formatTime(start + (end - start) * Math.max(timestampX0, timestampX1))}
-                        </span>
-                    </p>
+                    <div className="flex gap-2 items-center">
+                        <p>
+                            Selected range:&nbsp;
+                            <span className="font-bold">
+                                {formatTime(start + (end - start) * Math.min(timestampX0, timestampX1))}
+                                &nbsp;:&nbsp;
+                                {formatTime(start + (end - start) * Math.max(timestampX0, timestampX1))}
+                            </span>
+                        </p>
+                        <div>
+                            <img className="h-6 cursor-pointer" onClick={() => { setTimestampX0(null); setTimestampX1(null) }} src="img/delete.svg" alt='delete' />
+                        </div>
+                    </div>
                     <p>
                         Number of selected notes: <span className="font-bold">{selectedNotesNum}</span>
                     </p>
                 </div>
             }
             {end &&
-            <PlayerOptions
-            isPlaying={isPlaying}
-            setIsPlaying={setIsPlaying}
-            playTimestamp={playTimestamp}
-            setPlayTimestamp={setPlayTimestamp}
-            x={indicatorX}
-            setX={setIndicatorX}
-            start={start}
-            end={end}
-            timestampX0={timestampX0}
-            timestampX1={timestampX1}
-            />}
+                <PlayerOptions
+                    isPlaying={isPlaying}
+                    setIsPlaying={setIsPlaying}
+                    playTimestamp={playTimestamp}
+                    setPlayTimestamp={setPlayTimestamp}
+                    x={indicatorX}
+                    setX={setIndicatorX}
+                    start={start}
+                    end={end}
+                    timestampX0={timestampX0}
+                    timestampX1={timestampX1}
+                />}
         </div>
     );
 }
