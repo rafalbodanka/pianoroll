@@ -32,7 +32,8 @@ export default function Grid({
             </div>
             <div className={`${playedRollIndex === -1 ? 'main-grid' : 'mt-8 col-span-5 lg:col-span-1 flex flex-col gap-8'}`}>
                 {!isLoading ?
-                    Array.from({ length: 20 }, (_, it) => {
+                    Array.from({ length: playedRollIndex === -1 ? 20 : 19 }, (_, it) => {
+                        if (playedRollIndex === it) return
                         const start = it * 60;
                         const end = start + 60;
                         const partData = data.slice(start, end);
