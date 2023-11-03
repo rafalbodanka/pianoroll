@@ -25,9 +25,9 @@ export default function Grid({
     }
 
     return (
-        <div className={`${playedRollIndex !== -1 && 'grid grid-cols-5'} p-[3em]`}>
+        <div className={`${playedRollIndex !== -1 && 'grid grid-cols-5'} py-4 px-[3em]`}>
             <div className={`col-span-5 lg:col-span-4 ${playedRollIndex === -1 ? 'hidden' : ''}`}>
-                <div className="cursor-pointer mb-8 inline-flex select-none" onClick={() => { setPlayedRollIndex(-1) }}>&larr; return to grid view </div>
+                <div className="cursor-pointer mb-8 inline-flex select-none bg-[#154151] tracking-wide text-[#F2F2F2] text-sm font-bold rounded-md py-1 px-2" onClick={() => { setPlayedRollIndex(-1) }}>&larr; back </div>
                 {playedRollIndex !== -1 && <Player playedRollIndex={playedRollIndex} partData={partData} />}
             </div>
             <div className={`${playedRollIndex === -1 ? 'main-grid' : 'mt-16 col-span-5 lg:col-span-1 flex flex-col gap-8 lg:overflow-y-scroll py-4 lg:h-[calc(100vh-44px-3em-80px)]'}`}>
