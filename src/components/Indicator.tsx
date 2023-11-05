@@ -30,7 +30,7 @@ export default function Indicator(
                 return;
             }
 
-            if (timestampX1 && x >= timestampX1 - 0.002) {
+            if (timestampX0 && timestampX1 !== null && x >= Math.max(timestampX0, timestampX1) - 0.002) {
                 setIsPlaying(false)
                 return
             }

@@ -55,11 +55,12 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         if (svgRef.current) {
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            if (timestampX0 && timestampX1 && xCoordinate <= Math.max(timestampX1, timestampX0) && xCoordinate >= Math.min(timestampX1, timestampX0)) {
+            if (timestampX0 && timestampX1 !== null && xCoordinate <= Math.max(timestampX1, timestampX0) && xCoordinate >= Math.min(timestampX1, timestampX0)) {
                 setIndicatorX(xCoordinate)
                 setIsDrawing(false)
                 return
             }
+            console.log('dupa')
             setIsDrawing(true)
             setTimestampX1(null)
             setTimestampX0(xCoordinate)
@@ -72,7 +73,15 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         if (svgRef.current && timestampX0) {
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            setTimestampX1(xCoordinate)
+            console.log(xCoordinate)
+            // Check if the user is trying to select outside the bounds
+            if (xCoordinate < 0.002) {
+                setTimestampX1(0);
+            } else if (xCoordinate > 0.998) {
+                setTimestampX1(1);
+            } else {
+                setTimestampX1(xCoordinate);
+            }
         }
     }
 
@@ -96,7 +105,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             const touch = e.touches[0]; // Get the first touch point
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            if (timestampX0 && timestampX1 && xCoordinate <= Math.max(timestampX1, timestampX0) && xCoordinate >= Math.min(timestampX1, timestampX0)) {
+            if (timestampX0 && timestampX1 !== null && xCoordinate <= Math.max(timestampX1, timestampX0) && xCoordinate >= Math.min(timestampX1, timestampX0)) {
                 setIndicatorX(xCoordinate)
                 setIsDrawing(false)
                 return
@@ -113,7 +122,14 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             const touch = e.touches[0]; // Get the first touch point
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            setTimestampX1(xCoordinate);
+            if (xCoordinate < 0.002) {
+                setTimestampX1(0);
+                console.log(xCoordinate)
+            } else if (xCoordinate > 0.998) {
+                setTimestampX1(1);
+            } else {
+                setTimestampX1(xCoordinate);
+            }
         }
     };
 
@@ -129,7 +145,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                     clearTimestamps()
                     return;
                 }
-                setTimestampX1(xCoordinate);
+                setTimestampX1(xCoordinate > 1 ? 1 : xCoordinate < 0 ? 0 : xCoordinate);
                 setIndicatorX(Math.min(timestampX0, xCoordinate))
             }
         }
@@ -227,8 +243,8 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                     )
                 })}
                 {timestampX0 && <rect width={0.002} height={1} x={timestampX0} y={0} fill="rgb(49, 27, 146)" />}
-                {timestampX0 && timestampX1 && <rect width={Math.abs(timestampX1 - timestampX0)} height={1} x={timestampX1 > timestampX0 ? timestampX0 : timestampX1} y={0} fill="rgb(49, 27, 146)" fillOpacity={'40%'} />}
-                {timestampX1 && <rect width={0.002} height={1} x={timestampX1} y={0} fill="rgb(49, 27, 146)" />}
+                {timestampX0 && timestampX1 !== null && <rect width={Math.abs(timestampX1 - timestampX0)} height={1} x={timestampX1 > timestampX0 ? timestampX0 : timestampX1} y={0} fill="rgb(49, 27, 146)" fillOpacity={'40%'} />}
+                {timestampX1 !== null && <rect width={0.002} height={1} x={timestampX1} y={0} fill="rgb(49, 27, 146)" />}
                 <Indicator
                     x={indicatorX}
                     setX={setIndicatorX}
@@ -245,7 +261,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 <div className="select-none">{formatTime(start)}</div>
                 <div className="select-none">{formatTime(end)}</div>
             </div>
-            {timestampX0 && timestampX1 &&
+            {(timestampX0 && timestampX1 !== null) &&
                 <div className="select-none">
                     <div className="flex gap-2 items-center">
                         <p>

@@ -16,12 +16,11 @@ export default function PlayerOptions({
     }) {
 
     const switchPlay = () => {
-        console.log(x)
         if (!timestampX0 && !isPlaying && x >= 0.998) {
             setX(0)
         }
-        if (timestampX1 && timestampX0 && x > timestampX1 - 0.002) {
-            setX(timestampX0)
+        if (timestampX1 !== null && timestampX0 && x > Math.max(timestampX0, timestampX1) - 0.002) {
+            setX(Math.min(timestampX0, timestampX1))
         }
         setIsPlaying(prev => !prev)
     }
@@ -29,7 +28,7 @@ export default function PlayerOptions({
     const stopAction = () => {
         setIsPlaying(false)
         setPlayTimestamp(start)
-        timestampX1 && timestampX0 ? setX(timestampX0) : setX(0)
+        timestampX1 && timestampX0 ? setX(Math.min(timestampX0, timestampX1)) : setX(0)
     }
 
     const formatTime = (timeInSeconds: number) => {
