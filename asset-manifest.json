@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/pianoroll/static/css/main.528a30c6.css",
-    "main.js": "/pianoroll/static/js/main.de7547f6.js",
+    "main.js": "/pianoroll/static/js/main.3c7738c7.js",
     "index.html": "/pianoroll/index.html",
     "main.528a30c6.css.map": "/pianoroll/static/css/main.528a30c6.css.map",
-    "main.de7547f6.js.map": "/pianoroll/static/js/main.de7547f6.js.map"
+    "main.3c7738c7.js.map": "/pianoroll/static/js/main.3c7738c7.js.map"
   },
   "entrypoints": [
     "static/css/main.528a30c6.css",
-    "static/js/main.de7547f6.js"
+    "static/js/main.3c7738c7.js"
   ]
 }
