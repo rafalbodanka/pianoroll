@@ -1,46 +1,92 @@
-# Getting Started with Create React App
+# Piano roll
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is solution to pianoroll.io [challenge](https://github.com/Nospoko/pianoroll-frontend-challenge#main-view).
 
-## Available Scripts
+You can access the live deployment of this project [here](https://rafalbodanka.github.io/pianoroll/).
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Installation](#installation)
+- [Usage](#usage)
+- [Credits](#credits)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Installation
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. Open a new terminal and navigate to the root folder.
+2. Install the required dependencies by running the following command:
 
-### `npm test`
+   ```bash
+   npm install
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Start the development server by running the following command:
 
-### `npm run build`
+   ```bash
+   npm start
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You should be able to access the app in your web browser at http://localhost:3000.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The Pianoroll project retrieves random data from pianoroll.ai using the `useFetchRolls` function. It then displays 20 results on the main page in the form of a dynamic grid. During the data retrieval process, a placeholder view known as "skeleton rolls" is displayed.
 
-### `npm run eject`
+### Main Page
+- The main page displays 20 random rolls in a dynamic grid.
+- Users can select one of the displayed rolls.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![Main view](./assets/main-view.png)
+![Main view](./assets/main-view-mobile.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Roll View
+- When a roll is selected, the view switches to a player view with the chosen roll.
+- A list of the remaining 19 results is displayed alongside or below the player.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![Roll view](./assets/roll-view.png)
+![Roll view mobile](./assets/roll-view-mobile.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### User Interaction
+- Users can switch between different rolls in the player view.
+- Users can return to the main page displaying all rolls.
+- On mobile devices, switching between rolls in the player view scrolls the screen to the top.
 
-## Learn More
+### Player
+- The player consists of the `Player` component and the `MainPianoRoll`.
+- It displays the start and end times of the selected roll.
+- An "Indicator" is added to track the current playback position.
+- Playback control buttons, including play/pause and stop, are provided.
+- Clicking the stop button resets the Indicator to the beginning of the roll or the selected range.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![Roll indicator view](./assets/roll-indicator-view.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Selection
+- Users can dynamically select a portion of the roll using the Indicator.
+- The selected range can be played again using control buttons (PlayerOptions).
+- Clicking outside the selection clears it, while clicking inside it doesn't remove the selection but moves the Indicator to the selected position.
+- The selection can also be removed using a button in the selection menu next to the start-end time information.
+
+![Selection view](./assets/selection-view.png)
+![Selection play view](./assets/selection-play-view.png)
+![Selection play view mobile](./assets/selection-view-mobile.png)
+
+### Interaction with the Rolls
+- Clicking on a roll sets the Indicator to the chosen position.
+- Clicking and dragging (or using touch on mobile devices) sets a range.
+
+### Display
+- Above the playback control buttons, the current player time is displayed.
+- The "Selected Range" dynamically shows the selected time range and the number of included tiles.
+- Selected tiles are also logged using `console.log` after the selection process.
+
+### Refresh and Navigation
+- The sound list can be regenerated by refreshing the page or clicking on the logo in the Navbar, which leads to the main page (/pianoroll).
+
+## Credits
+
+This project utilizes most of all the following libraries, frameworks, and resources:
+
+- [React](https://reactjs.org/): A JavaScript library for building user interfaces.
+- [Tailwind CSS](https://tailwindcss.com/): A utility-first CSS framework for rapidly building custom user interfaces.
+- [Pianoroll.ai API](https://pianoroll.ai/random_notes): A collection of random notes.
+
+Please refer to the documentation or official websites of these resources for more information on how they were used in this project.
