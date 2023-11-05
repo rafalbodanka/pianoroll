@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export default function PlayerOptions({
     isPlaying, setIsPlaying, playTimestamp, setPlayTimestamp, start, end, x, setX, timestampX0, timestampX1 }:
     {
@@ -13,11 +15,12 @@ export default function PlayerOptions({
         timestampX1: number | null,
     }) {
 
-        const switchPlay = () => {
-        if (!timestampX0 && !isPlaying && x>=0.998) {
+    const switchPlay = () => {
+        console.log(x)
+        if (!timestampX0 && !isPlaying && x >= 0.998) {
             setX(0)
         }
-        if (timestampX1 && timestampX0 && x>timestampX1-0.002) {
+        if (timestampX1 && timestampX0 && x > timestampX1 - 0.002) {
             setX(timestampX0)
         }
         setIsPlaying(prev => !prev)
@@ -38,6 +41,21 @@ export default function PlayerOptions({
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds}`;
     };
 
+    const handleSpacebarPress = (event: KeyboardEvent) => {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            event.preventDefault();
+            switchPlay();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleSpacebarPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleSpacebarPress);
+        };
+    }, [x, timestampX0, timestampX1, isPlaying]);
+
     return (
         <div className="mt-6">
             <p className="flex justify-center select-none">{formatTime(start + (end - start) * x)}</p>
@@ -46,15 +64,15 @@ export default function PlayerOptions({
                     onClick={switchPlay}
                     className="cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
                     {isPlaying ?
-                        <img className="h-4" src={'img/pause.svg'} alt='pause'/>
+                        <img className="h-4" src={'img/pause.svg'} alt='pause' />
                         :
-                        <img className="h-4" src={'img/play.svg'} alt="pause"/>
+                        <img className="h-4" src={'img/play.svg'} alt="pause" />
                     }
                 </div>
                 <div
                     onClick={stopAction}
                     className="cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
-                    <img className="h-4" src={'img/stop.svg'} alt='stop'/>
+                    <img className="h-4" src={'img/stop.svg'} alt='stop' />
                 </div>
             </div>
         </div>
