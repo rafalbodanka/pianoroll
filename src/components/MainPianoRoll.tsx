@@ -60,7 +60,6 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
                 setIsDrawing(false)
                 return
             }
-            console.log('dupa')
             setIsDrawing(true)
             setTimestampX1(null)
             setTimestampX0(xCoordinate)
@@ -73,7 +72,6 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         if (svgRef.current && timestampX0) {
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            console.log(xCoordinate)
             // Check if the user is trying to select outside the bounds
             if (xCoordinate < 0.002) {
                 setTimestampX1(0);
@@ -89,12 +87,13 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         if (svgRef.current && timestampX0 && isDrawing) {
             setIsDrawing(false)
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
-            const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+            let xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
             if (xCoordinate === timestampX0) {
                 clearTimestamps()
                 return
             }
-            setTimestampX1(xCoordinate)
+            setTimestampX1(xCoordinate > 1 ? 1 : xCoordinate < 0 ? 0 : xCoordinate);
+            if (xCoordinate < 0) xCoordinate = 0
             setIndicatorX(Math.min(timestampX0, xCoordinate))
         }
     }
@@ -124,7 +123,6 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
             if (xCoordinate < 0.002) {
                 setTimestampX1(0);
-                console.log(xCoordinate)
             } else if (xCoordinate > 0.998) {
                 setTimestampX1(1);
             } else {
@@ -140,12 +138,13 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
             if (touches.length > 0) {
                 const touch = touches[0]; // Get the first changed touch
                 const svgBoundingBox = svgRef.current.getBoundingClientRect();
-                const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+                let xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
                 if (xCoordinate === timestampX0) {
                     clearTimestamps()
                     return;
                 }
                 setTimestampX1(xCoordinate > 1 ? 1 : xCoordinate < 0 ? 0 : xCoordinate);
+                if (xCoordinate < 0) xCoordinate = 0
                 setIndicatorX(Math.min(timestampX0, xCoordinate))
             }
         }
