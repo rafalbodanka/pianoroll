@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function Indicator(
     { x, setX, start, end, isPlaying, setIsPlaying, playTimestamp, setPlayTimestamp, timestampX0, timestampX1 }

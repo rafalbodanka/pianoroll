@@ -68,10 +68,15 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
 
     const handleSVGClick = (e: React.MouseEvent<SVGSVGElement>) => {
         if (svgRef.current) {
-            setIsDrawing(true)
-            setTimestampX1(null)
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+            if (timestampX0 && timestampX1 && xCoordinate <= timestampX1 && xCoordinate >= timestampX0) {
+                setIndicatorX(xCoordinate)
+                setIsDrawing(false)
+                return
+            }
+            setIsDrawing(true)
+            setTimestampX1(null)
             setTimestampX0(xCoordinate)
             setIsPlaying(false)
         }
@@ -87,7 +92,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     }
 
     const handleSVGUp = (e: React.MouseEvent<SVGSVGElement>) => {
-        if (svgRef.current && timestampX0) {
+        if (svgRef.current && timestampX0 && isDrawing) {
             setIsDrawing(false)
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;

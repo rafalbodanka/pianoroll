@@ -19,7 +19,6 @@ export default function PianoRoll({ it, sequence }: { it: number; sequence: Note
 
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(0);
-  const [noteHeight, setNoteHeight] = useState<number>(0);
   const [pitchMin, setPitchMin] = useState<number>(0)
   const [pitchMax, setPitchMax] = useState<number>(0)
   const [pitchSpan, setPitchSpan] = useState<number>(0);
@@ -46,7 +45,6 @@ export default function PianoRoll({ it, sequence }: { it: number; sequence: Note
     pitchSpan = pitchMax - pitchMin;
     setStart(sequence[0].start);
     setEnd(sequence[sequence.length - 1].end - start);
-    setNoteHeight(1 / pitchSpan);
     setPitchMax(pitchMax)
     setPitchMin(pitchMin)
     setPitchSpan(pitchSpan)

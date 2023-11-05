@@ -14,10 +14,10 @@ export default function PlayerOptions({
     }) {
 
         const switchPlay = () => {
-        if (!timestampX0 && !isPlaying && x>=0.98) {
+        if (!timestampX0 && !isPlaying && x>=0.998) {
             setX(0)
         }
-        if (timestampX1 && timestampX0 && x>timestampX1-0.02) {
+        if (timestampX1 && timestampX0 && x>timestampX1-0.002) {
             setX(timestampX0)
         }
         setIsPlaying(prev => !prev)
@@ -40,21 +40,21 @@ export default function PlayerOptions({
 
     return (
         <div className="mt-6">
-            <p className="flex justify-center">{formatTime(start + (end - start) * x)}</p>
+            <p className="flex justify-center select-none">{formatTime(start + (end - start) * x)}</p>
             <div className="mt-2 flex justify-center gap-4">
                 <div
                     onClick={switchPlay}
                     className="cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
                     {isPlaying ?
-                        <img className="h-4" src={'img/pause.svg'} />
+                        <img className="h-4" src={'img/pause.svg'} alt='pause'/>
                         :
-                        <img className="h-4" src={'img/play.svg'} />
+                        <img className="h-4" src={'img/play.svg'} alt="pause"/>
                     }
                 </div>
                 <div
                     onClick={stopAction}
                     className="cursor-pointer bg-gray-300 hover:bg-gray-400 inline-flex items-center justify-center h-8 w-8" >
-                    <img className="h-4" src={'img/stop.svg'} />
+                    <img className="h-4" src={'img/stop.svg'} alt='stop'/>
                 </div>
             </div>
         </div>
