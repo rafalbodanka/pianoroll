@@ -55,7 +55,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         if (svgRef.current) {
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (e.clientX - svgBoundingBox.left) / svgBoundingBox.width;
-            if (timestampX0 && timestampX1 && xCoordinate <= timestampX1 && xCoordinate >= timestampX0) {
+            if (timestampX0 && timestampX1 && xCoordinate <= Math.max(timestampX1, timestampX0) && xCoordinate >= Math.min(timestampX1, timestampX0)) {
                 setIndicatorX(xCoordinate)
                 setIsDrawing(false)
                 return
@@ -93,11 +93,16 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     //mobile actions
     const handleSVGTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
         if (svgRef.current) {
-            setIsDrawing(true);
-            setTimestampX1(null);
             const touch = e.touches[0]; // Get the first touch point
             const svgBoundingBox = svgRef.current.getBoundingClientRect();
             const xCoordinate = (touch.clientX - svgBoundingBox.left) / svgBoundingBox.width;
+            if (timestampX0 && timestampX1 && xCoordinate <= Math.max(timestampX1, timestampX0) && xCoordinate >= Math.min(timestampX1, timestampX0)) {
+                setIndicatorX(xCoordinate)
+                setIsDrawing(false)
+                return
+            }
+            setIsDrawing(true);
+            setTimestampX1(null);
             setTimestampX0(xCoordinate);
         }
     };
@@ -113,7 +118,7 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
     };
 
     const handleSVGTouchEnd = (e: React.TouchEvent<SVGSVGElement>) => {
-        if (svgRef.current && timestampX0) {
+        if (svgRef.current && timestampX0 && isDrawing) {
             setIsDrawing(false);
             const touches = e.changedTouches;
             if (touches.length > 0) {
