@@ -1,29 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Note } from "../types/Note";
-import { Color } from "../types/Color";
 import ToneRow from "./ToneRow";
 import Tile from "./Tile";
 import PlayerOptions from "./PlayerOptions";
-import { time } from "console";
 import Indicator from "./Indicator";
-
-export function generateGradientTable(startColor: Color, endColor: Color, steps: number) {
-    const gradientTable = [];
-    for (let i = 0; i < steps; i++) {
-        const r = startColor.r + ((endColor.r - startColor.r) * i) / (steps - 1);
-        const g = startColor.g + ((endColor.g - startColor.g) * i) / (steps - 1);
-        const b = startColor.b + ((endColor.b - startColor.b) * i) / (steps - 1);
-        gradientTable.push(`rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`);
-    }
-    return gradientTable;
-}
 
 export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; sequence: Note[], isPlayed: boolean }) {
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [start, setStart] = useState<number>(0);
     const [end, setEnd] = useState<number>(0);
-    const [noteHeight, setNoteHeight] = useState<number>(0);
     const [pitchMin, setPitchMin] = useState<number>(0)
     const [pitchMax, setPitchMax] = useState<number>(0)
     const [pitchSpan, setPitchSpan] = useState<number>(0);
@@ -60,7 +46,6 @@ export default function MainPianoRoll({ it, sequence, isPlayed }: { it: number; 
         setStart(sequence[0].start);
         setEnd(sequence[sequence.length - 1].end);
         setPlayTimestamp(sequence[0].start)
-        setNoteHeight(1 / pitchSpan);
         setPitchMax(pitchMax)
         setPitchMin(pitchMin)
         setPitchSpan(pitchSpan)
